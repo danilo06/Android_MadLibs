@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">MadLibs</string>
+    <string name="descripcion">Bienvenido a MadLibs!
+        a continuacion, escribe todas las paralabras faltantes y observa tu gran historia!</string>
+    <string name="botonText">Jugar!</string>
+</resources>
