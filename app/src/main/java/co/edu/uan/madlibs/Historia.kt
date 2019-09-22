@@ -22,7 +22,6 @@ class Historia : AppCompatActivity() {
     fun writer(inputs: ArrayList<String>){
         val builder = StringBuilder()
         val reader = Scanner(resources.openRawResource(resources.getIdentifier(HISTORIA_NOMBRE, "raw", packageName))
-
         val first_line = reader.nextLine()
         builder.append(first_line)
         while(reader.hasNextLine()){
