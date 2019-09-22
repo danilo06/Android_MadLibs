@@ -14,14 +14,14 @@ class Historia : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_historia)
-        val inputs = intent.getStringArrayListExtra("inputs")  // recupera las palabras ingresadas
-        writer(inputs)
+        val inputs = intent.getStringArrayListExtra("inputs")
+        writer(inputs, resources.getIdentifier(HISTORIA_NOMBRE, "raw", packageName))
     }
 
-    fun writer(inputs: ArrayList<String>){
+    fun writer(inputs: ArrayList<String>, storyID: Int){
         val builder = StringBuilder()
-        val reader = Scanner(resources.openRawResource(resources.getIdentifier(HISTORIA_NOMBRE, "raw", packageName))
+        val reader = Scanner(resources.openRawResource(storyID))
+
         val first_line = reader.nextLine()
         builder.append(first_line)
         while(reader.hasNextLine()){
@@ -30,18 +30,16 @@ class Historia : AppCompatActivity() {
             builder.append(line)
         }
 
-        var theStory = builder.toString()
-        val regex = Regex("<.*?>")
-        val blanks = regex.findAll(theStory).map { it.value }
+        var story = builder.toString()
+
+        val r = Regex("<.*?>")
+        val blanks = r.findAll(story).map { it.value }
         var i: Int = 0
         for(blank in blanks){
-            theStory = theStory.replaceFirst(blank, inputs.get(i))
+            story = story.replaceFirst(blank, inputs.get(i))
             i++
         }
-        textView3.text = "$theStory"
+        textView3.text = "$story"
     }
-    fun nuevaHistoriaBtn(view: View){
-        val myIntent = Intent(this, MainActivity::class.java)
-        startActivity(myIntent) // ir a la página de inicio
-    }
+
 }

@@ -4,48 +4,56 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_words_view.*
 import java.util.*
 
 class wordsView : AppCompatActivity() {
 
+    private val REQ_CODE = 123
+    private lateinit var myAdapter: ArrayAdapter<String>
     private val palabras = ArrayList<String>()
     private val palabrasType = ArrayList<String>()
     private var aux = 0
-    val HISTORIA_NOMBRE: String = "madlib0_simple"
+    private var aux2 = 0
+    private var storyID = 0
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_words_view)
+        val story ="madlib0_simple"
+        extract(story)
     }
 
-    fun modificarHistoria(story: String){
 
-        var builder = StringBuilder()
-        val reader = Scanner(resources.openRawResource(resources.getIdentifier(HISTORIA_NOMBRE, "raw", packageName)))
+    fun extract(story: String){
+        val builder = StringBuilder()
+        this.storyID = resources.getIdentifier(story, "raw", packageName)
+        val reader = Scanner(resources.openRawResource(storyID))
         while(reader.hasNextLine()){
             val line = reader.nextLine()
             builder.append(line)
         }
-        var theStory = builder.toString()
+        var story = builder.toString()
         val r = Regex("<.*?>")
-        val found = r.findAll(theStory)
+        val found = r.findAll(story)
         found.forEach{ f ->
             val m = f.value
             palabrasType.add(m)
             aux++
         }
+        aux2 = aux
         val first_type = palabrasType.get(0)
         editText.hint = "por favor ingrese $first_type"
-        remainingAttempts.setText("palabras restantes: $aux")
+        remainingAttempts.setText("$aux / $aux2")
     }
 
-    fun añadirPalabras(view: View){
-
-
+    fun agregarClick(view: View){
         if(editText.text.toString().isEmpty() || editText.text.toString().trim().isEmpty()){
-            val Toast = Toast.makeText(this, "Ingrese una palabra", Toast.LENGTH_SHORT)
+            val Toast = Toast.makeText(this, "Ingrese la palabra!", Toast.LENGTH_SHORT)
             Toast.show()
         }
         else{
@@ -55,22 +63,20 @@ class wordsView : AppCompatActivity() {
             editText.setText("")
             if(aux >= 1){
                 val next_type = palabrasType.get(palabrasType.size - aux)
-                editText.hint = "por favor ingrese $next_type"
-                remainingAttempts.setText("palabras restantes: $aux")
+                editText.hint = "Ungrese $next_type"
+                remainingAttempts.setText("$aux / $aux2")
             }
+        /*
+            if(aux == 1)
+                btnAgregar.text = "LISTO!"
+        */
 
             if(aux == 0){
-                val myIntent = Intent(this, Historia::class.java)
-                myIntent.putExtra("inputs", palabras)
-                myIntent.putExtra("storyID", storyID)
-                startActivityForResult(myIntent, REQ_CODE)
+                val intent = Intent(this, Historia::class.java)
+                intent.putExtra("inputs", palabras)
+                //intent.putExtra("storyID", storyID)
+                startActivityForResult(intent, REQ_CODE)
             }
-            /*
-            if(aux == 1){
-                aceptarBtn.text = "Listo"
-            }
-            */
-
         }
     }
 }

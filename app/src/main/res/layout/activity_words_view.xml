@@ -68,6 +68,7 @@
         android:layout_width="120dp"
         android:layout_height="42dp"
         android:layout_marginTop="36dp"
+        android:onClick="agregarClick"
         android:text="Agregar!"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
