@@ -4,51 +4,45 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_words_view.*
 import java.util.*
 
 class wordsView : AppCompatActivity() {
-
-    private val REQ_CODE = 123
-    private lateinit var myAdapter: ArrayAdapter<String>
-    private val palabras = ArrayList<String>()
-    private val palabrasType = ArrayList<String>()
-    private var aux = 0
-    private var aux2 = 0
-    private var storyID = 0
-
+    private var identificador = 0
+    private val posicion = 123
+    private var Contador2TotalCampos = 0
+    private var ContadorCamposBlanco = 0
+    private val Entradas = ArrayList<String>()
+    private val ListaPalabras = ArrayList<String>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_words_view)
-        val story ="madlib0_simple"
-        extract(story)
+        ProcesoTextoConteo("madlib0_simple")
     }
 
-
-    fun extract(story: String){
-        val builder = StringBuilder()
-        this.storyID = resources.getIdentifier(story, "raw", packageName)
-        val reader = Scanner(resources.openRawResource(storyID))
+    fun ProcesoTextoConteo(lectura: String){
+        val builderObject = StringBuilder()
+        this.identificador = resources.getIdentifier(lectura, "raw", packageName)
+        val reader = Scanner(resources.openRawResource(identificador))
         while(reader.hasNextLine()){
             val line = reader.nextLine()
-            builder.append(line)
+            builderObject.append(line)
         }
-        var story = builder.toString()
+        var Historia = builderObject.toString()
         val r = Regex("<.*?>")
-        val found = r.findAll(story)
+        val found = r.findAll(Historia)
         found.forEach{ f ->
             val m = f.value
-            palabrasType.add(m)
-            aux++
+            ListaPalabras.add(m)
+            ContadorCamposBlanco++
         }
-        aux2 = aux
-        val first_type = palabrasType.get(0)
-        editText.hint = "por favor ingrese $first_type"
-        remainingAttempts.setText("$aux / $aux2")
+        Contador2TotalCampos = ContadorCamposBlanco
+        val type = ListaPalabras.get(0)
+        editText.hint = "$type"
+        remainingAttempts.setText("$ContadorCamposBlanco / $Contador2TotalCampos")
     }
 
     fun agregarClick(view: View){
@@ -58,24 +52,24 @@ class wordsView : AppCompatActivity() {
         }
         else{
             val word = editText.text.toString().trim()
-            palabras.add(word)
-            aux--
+            Entradas.add(word)
+            ContadorCamposBlanco--
             editText.setText("")
-            if(aux >= 1){
-                val next_type = palabrasType.get(palabrasType.size - aux)
+            if(ContadorCamposBlanco >= 1){
+                val next_type = ListaPalabras.get(ListaPalabras.size - ContadorCamposBlanco)
                 editText.hint = "Ungrese $next_type"
-                remainingAttempts.setText("$aux / $aux2")
+                remainingAttempts.setText("$ContadorCamposBlanco / $Contador2TotalCampos")
             }
         /*
             if(aux == 1)
                 btnAgregar.text = "LISTO!"
         */
 
-            if(aux == 0){
+            if(ContadorCamposBlanco == 0){
                 val intent = Intent(this, Historia::class.java)
-                intent.putExtra("inputs", palabras)
+                intent.putExtra("inputs", Entradas)
                 //intent.putExtra("storyID", storyID)
-                startActivityForResult(intent, REQ_CODE)
+                startActivityForResult(intent, posicion)
             }
         }
     }
