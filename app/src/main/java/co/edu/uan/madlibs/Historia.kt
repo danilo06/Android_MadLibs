@@ -10,17 +10,18 @@ import kotlin.collections.ArrayList
 
 class Historia : AppCompatActivity() {
 
+    val HISTORIA_NOMBRE: String = "madlib0_simple"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_historia)
         val inputs = intent.getStringArrayListExtra("inputs")  // recupera las palabras ingresadas
-        val storyID = intent.getIntExtra("storyID", 0) // recupera el id
-        writer(inputs, storyID)
+        writer(inputs)
     }
 
-    fun writer(inputs: ArrayList<String>, storyID: Int){
+    fun writer(inputs: ArrayList<String>){
         val builder = StringBuilder()
-        val reader = Scanner(resources.openRawResource(storyID))
+        val reader = Scanner(resources.openRawResource(resources.getIdentifier(HISTORIA_NOMBRE, "raw", packageName))
 
         val first_line = reader.nextLine()
         builder.append(first_line)
