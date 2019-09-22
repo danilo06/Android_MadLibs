@@ -22,7 +22,27 @@ class wordsView : AppCompatActivity() {
         setContentView(R.layout.activity_words_view)
         ProcesoTextoConteo("madlib0_simple")
     }
-
+    fun Clickword(view: View){
+        if(editText.text.toString().isEmpty() || editText.text.toString().trim().isEmpty()){
+            val Toast = Toast.makeText(this, "Ingrese la palabra!", Toast.LENGTH_SHORT)
+            Toast.show()
+        }
+        else{
+            val word = editText.text.toString().trim()
+            Entradas.add(word)
+            ContadorCamposBlanco--
+            editText.setText("")
+            if(ContadorCamposBlanco >= 1){
+                val next_type = ListaPalabras.get(ListaPalabras.size - ContadorCamposBlanco)
+                editText.hint = "Ungrese $next_type"
+                remainingAttempts.setText("$ContadorCamposBlanco / $Contador2TotalCampos")
+            }else if(ContadorCamposBlanco == 0){
+                val intent = Intent(this, Historia::class.java)
+                intent.putExtra("inputs", Entradas)
+                startActivityForResult(intent, posicion)
+            }
+        }
+    }
     fun ProcesoTextoConteo(lectura: String){
         val builderObject = StringBuilder()
         this.identificador = resources.getIdentifier(lectura, "raw", packageName)
@@ -45,32 +65,5 @@ class wordsView : AppCompatActivity() {
         remainingAttempts.setText("$ContadorCamposBlanco / $Contador2TotalCampos")
     }
 
-    fun agregarClick(view: View){
-        if(editText.text.toString().isEmpty() || editText.text.toString().trim().isEmpty()){
-            val Toast = Toast.makeText(this, "Ingrese la palabra!", Toast.LENGTH_SHORT)
-            Toast.show()
-        }
-        else{
-            val word = editText.text.toString().trim()
-            Entradas.add(word)
-            ContadorCamposBlanco--
-            editText.setText("")
-            if(ContadorCamposBlanco >= 1){
-                val next_type = ListaPalabras.get(ListaPalabras.size - ContadorCamposBlanco)
-                editText.hint = "Ungrese $next_type"
-                remainingAttempts.setText("$ContadorCamposBlanco / $Contador2TotalCampos")
-            }
-        /*
-            if(aux == 1)
-                btnAgregar.text = "LISTO!"
-        */
 
-            if(ContadorCamposBlanco == 0){
-                val intent = Intent(this, Historia::class.java)
-                intent.putExtra("inputs", Entradas)
-                //intent.putExtra("storyID", storyID)
-                startActivityForResult(intent, posicion)
-            }
-        }
-    }
 }

@@ -15,10 +15,10 @@ class Historia : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val inputs = intent.getStringArrayListExtra("inputs")
-        writer(inputs, resources.getIdentifier(HISTORIA_NOMBRE, "raw", packageName))
+        escritura(inputs, resources.getIdentifier(HISTORIA_NOMBRE, "raw", packageName))
     }
 
-    fun writer(inputs: ArrayList<String>, storyID: Int){
+    fun escritura(inputs: ArrayList<String>, storyID: Int){
         val builder = StringBuilder()
         val reader = Scanner(resources.openRawResource(storyID))
 
@@ -29,9 +29,7 @@ class Historia : AppCompatActivity() {
             builder.append(" ")
             builder.append(line)
         }
-
         var story = builder.toString()
-
         val r = Regex("<.*?>")
         val blanks = r.findAll(story).map { it.value }
         var i: Int = 0
