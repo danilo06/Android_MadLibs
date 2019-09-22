@@ -31,7 +31,6 @@ class Historia : AppCompatActivity() {
         }
 
         var theStory = builder.toString()
-
         val regex = Regex("<.*?>")
         val blanks = regex.findAll(theStory).map { it.value }
         var i: Int = 0
@@ -41,7 +40,6 @@ class Historia : AppCompatActivity() {
         }
         textView3.text = "$theStory"
     }
-
     fun nuevaHistoriaBtn(view: View){
         val myIntent = Intent(this, MainActivity::class.java)
         startActivity(myIntent) // ir a la página de inicio
